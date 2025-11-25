@@ -103,7 +103,10 @@ programmes de fidélité adaptés à la valeur client
 
 ---
 
-Remerciement à Olist pour leurs données open source :
+## Reconnaissances
+
+Tous mes remerciements à Olist pour leurs données open source :
+
 ```
 @misc{olist_andr__sionek_2018,
 	title={Brazilian E-Commerce Public Dataset by Olist},
