@@ -32,23 +32,55 @@ and then hit this command in your terminal:
 ```
 
 
-1. Clustering RFM + Feature Engineering pour Segmentation marketing
+1. **Clustering RFM + Feature Engineering pour Segmentation marketing**
 
-🎯 Objectif
+**🎯 Objectif**
 
 Créer une segmentation marketing avancée basée sur RFM enrichi avec les données du dataset
 
-A. **Préparation et intégration RFM**
+A. **Feature Engineering Marketing : Préparation et intégration RFM**
 
 - Créer les métriques classiques :
 
   - Récence : date d’achat la plus récente
-
   - Fréquence : nombre de commandes
-
   - Monétaire : montant total dépensé
 
-B. **Feature Engineering Marketing**
+
+**C. Clustering**
+
+- Standardisation
+- Dimension reduction (PCA)
+- Tester K-Means, GMM, Agglomerative
+- Valider les clusters (Silhouette, Davies-Bouldin)
+
+
+**La segmentation proposée doit être exploitable et facile d’utilisation par notre équipe Marketing**. Elle doit au minimum **pouvoir différencier les bons et moins bons clients** en termes de commandes et de satisfaction. Nous attendons bien sûr une segmentation sur l’ensemble des clients.
+
+Dans un deuxième temps, une fois le modèle de segmentation choisi, nous souhaiterions  que vous nous fassiez **une recommandation de fréquence à laquelle la segmentation doit être mise à jour pour rester pertinente**, afin de pouvoir effectuer **un devis de contrat de maintenance**.
+
+
+**D. Interprétation marketing**
+
+Créer des personas :
+
+- Premium Loyalists
+- Bargain Hunters
+- Low-Frequency High-Value buyers
+- At-risk customers
+- Early-churners
+
+**E. Livrables**
+
+Strategy book de **traitement des données (data pipeline), de segmentations (simple et interprétable par l'équipe Marketing) et de maintenance du modèle de segmentation régulière prenant en compte le nouveaux clients et les nouveaux comportement (but: segmentation cohérente)**
+
+- Un notebook de l'analyse exploratoire (non cleané, pour comprendre la démarche d'acquisition de données RFM).
+- Un notebook (ou code commenté au choix) d’essais des différentes approches de modélisation (non cleané, pour comprendre la démarche de modélisation).
+- Un notebook de simulation pour déterminer la fréquence nécessaire de mise à jour du modèle de segmentation (à une éventuelle dérive du modèle).
+**NB** : Le code fourni doit respecter la **convention PEP8**, pour être utilisable par Olist.
+
+---
+## Suggestion de **Feature Engineering Marketing**
 
 Ajouter des variables complémentaires :
 
@@ -57,49 +89,11 @@ Ajouter des variables complémentaires :
 - fidélité (répétition de vendeurs)
 - délai moyen de livraison
 - taux de retour ou remboursement
-- sentiment moyen des reviews (si existe)
-- Données externes possibles :
-- socio-démographie par code postal
-- revenus moyens par région
-- IPCA / inflation (corrélation prix vs satisfaction)
-
-C. Clustering
-
-Standardisation
-
-Dimension reduction (PCA)
-
-Tester K-Means, GMM, Agglomerative
-
-Valider les clusters (Silhouette, Davies-Bouldin)
-
-D. Interprétation marketing
-
-Créer des personas :
-
-Premium Loyalists
-
-Bargain Hunters
-
-Low-Frequency High-Value buyers
-
-At-risk customers
-
-Early-churners
-
-E. Livrables
-
-Strategy book de segmentations
-
-Recommandations marketing :
-
-email ciblé selon cluster
-
-promos pour réactiver certains segments
-
-programmes de fidélité adaptés à la valeur client
-
-
+- sentiment moyen des reviews
+  - Données externes possibles :
+  - socio-démographie par code postal
+  - revenus moyens par région
+  - IPCA / inflation (corrélation prix vs satisfaction)
 
 ---
 
