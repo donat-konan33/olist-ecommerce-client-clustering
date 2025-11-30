@@ -59,9 +59,9 @@ Génère deux fichiers parquet dans `data/processed/`:
 |-------|---------|---------|
 | **Exploration** | `notebooks/01_eda.ipynb` | Analyse détaillée des 5 sources, justification des choix RFM |
 | **Feature Engineering** | `src/01_rfms_processing_pipeline.py` | Code production (PEP8) : chargement → transformation → export parquet |
-| **Modélisation** | `notebooks/02_modeling.ipynb` | Comparaison K-Means, GMM, Agglomerative ; sélection meilleur modèle |
-| **Personas** | `notebooks/02_modeling.ipynb` | 5 segments marketing exploitables |
-| **Maintenance** | `notebooks/03_simulation.ipynb` | Recommandation fréquence mise à jour ; drift detection |
+| **Modélisation** | `notebooks/02_cluster_rfms.ipynb` | Comparaison K-Means, GMM, Agglomerative ; sélection meilleur modèle |
+| **Personas** | `notebooks/02_cluster_rfms.ipynb` | 5 segments marketing exploitables |
+| **Maintenance** | `notebooks/03_cluster_monotoring.ipynb` | Recommandation fréquence mise à jour ; drift detection |
 
 ## 📊 Métriques RFM
 
@@ -83,13 +83,16 @@ Par client (customer_unique_id):
 ## 💡 Points clés
 
 ✅ **Segmentation stable et maintenable** : Algorithme reproductible, fréquence de mise à jour définie
+
 ✅ **Exploitable par Marketing** : Personas clairs avec actions recommandées
+
 ✅ **Scalable** : Intégration de nouveaux clients définie
+
 ✅ **Code production** : Respecte PEP8 et conventions Olist
 
 ## 📚 Données source
 
-Dataset Olist (~100k commandes, 2016-2018):
+Dataset Olist pour la RFM (~100k commandes, 2016-2018):
 - olist_orders_dataset
 - olist_customers_dataset
 - olist_order_items_dataset
@@ -117,4 +120,5 @@ Dataset Olist (~100k commandes, 2016-2018):
 ---
 
 **Status**: En cours de développement
+
 **Dernière mise à jour**: Novembre 2025

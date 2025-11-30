@@ -198,19 +198,19 @@ class RFMSProcessingPipeline:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         rfms_data.to_parquet(
-            output_dir / "rfms_data_.parquet",
+            output_dir / "rfms_data.parquet",
             index=False,
             engine="fastparquet"
         )
 
         active_reviewers.to_parquet(
-            output_dir / "rfms_active_reviewers_.parquet",
+            output_dir / "rfms_active_reviewers.parquet",
             index=False,
             engine="fastparquet"
         )
 
         silent_customers.to_parquet(
-            output_dir / "rfms_silent_customers_.parquet",
+            output_dir / "rfms_silent_customers.parquet",
             index=False,
             engine="fastparquet"
         )
