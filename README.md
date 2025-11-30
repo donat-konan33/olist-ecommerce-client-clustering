@@ -2,13 +2,6 @@
 
 Segmentation marketing basée sur RFM enrichi pour identifier et analyser les profils clients du dataset Brazilian E-Commerce d'Olist.
 
-![olist-database-modeling](assets/images/olist-database-modeling.png)
-
-
-# OList Ecommerce Client Clustering
-
-Segmentation marketing basée sur RFM enrichi pour identifier et analyser les profils clients du dataset Brazilian E-Commerce d'Olist.
-
 ## 📊 Objectif
 
 Créer une **segmentation marketing exploitable** différenciant les bons et moins bons clients en termes de comportement d'achat et de satisfaction, avec recommandations de maintenance du modèle.
