@@ -1,105 +1,113 @@
-# OList Ecommerce Clustering issue solved
+# OList Ecommerce Client Clustering
 
-Here are all data available about its database:
-
-Data Schema
+Segmentation marketing basée sur RFM enrichi pour identifier et analyser les profils clients du dataset Brazilian E-Commerce d'Olist.
 
 ![olist-database-modeling](assets/images/olist-database-modeling.png)
 
-This dataset was generously provided by Olist, the largest department store in Brazilian marketplaces.
 
-Attention You must focus on :
+# OList Ecommerce Client Clustering
 
-1. An order might have multiple items.
-2. Each item might be fulfilled by a distinct seller.
-3. All text identifying stores and partners where replaced by the names of Game of Thrones great houses.
+Segmentation marketing basée sur RFM enrichi pour identifier et analyser les profils clients du dataset Brazilian E-Commerce d'Olist.
 
-Download data:
+## 📊 Objectif
 
-Put to scripts/download-data.sh
+Créer une **segmentation marketing exploitable** différenciant les bons et moins bons clients en termes de comportement d'achat et de satisfaction, avec recommandations de maintenance du modèle.
 
-```
-
-#!/bin/bash
-kaggle datasets download olistbr/brazilian-ecommerce
+## 📁 Structure du projet
 
 ```
-
-and then hit this command in your terminal:
-
+olist-ecommerce-client-clustering/
+├── notebooks/
+│   ├── 01_eda.ipynb                      # Analyse exploratoire des données
+│   ├── 02_modeling.ipynb                 # Tests des algorithmes de clustering
+│   └── 03_simulation.ipynb               # Fréquence de mise à jour du modèle
+├── src/
+│   └── 01_rfms_processing_pipeline.py    # Pipeline de traitement RFM
+├── data/
+│   ├── raw/                              # Données brutes Olist (9 CSV)
+│   └── processed/                        # Données transformées (Parquet)
+├── assets/images/
+│   └── olist-database-modeling.png       # Schéma de la base de données
+├── scripts/
+│   └── download-data.sh                  # Téléchargement Kaggle
+└── requirements.txt
 ```
+
+## 🚀 Installation
+
+### 1. Télécharger les données
+
+```bash
+# Configurer votre clé Kaggle, puis:
 ./scripts/download-data.sh
 ```
 
+Les 5 fichiers CSV seront extraits dans `data/raw/`.
 
-1. **Clustering RFM + Feature Engineering pour Segmentation marketing**
+### 2. Installer les dépendances
 
-**🎯 Objectif**
+```bash
+pip install -r requirements.txt
+```
 
-Créer une segmentation marketing avancée basée sur RFM enrichi avec les données du dataset
+### 3. Exécuter la pipeline RFM
 
-A. **Feature Engineering Marketing : Préparation et intégration RFM**
+```bash
+python src/01_rfms_processing_pipeline.py
+```
 
-- Créer les métriques classiques :
+Génère deux fichiers parquet dans `data/processed/`:
+- `rfms_active_reviewers.parquet` (98k+ clients avec avis)
+- `rfms_silent_customers.parquet` (~1k clients sans avis)
 
-  - Récence : date d’achat la plus récente
-  - Fréquence : nombre de commandes
-  - Monétaire : montant total dépensé
+## 📈 Livrables
 
+| Phase | Fichier | Contenu |
+|-------|---------|---------|
+| **Exploration** | `notebooks/01_eda.ipynb` | Analyse détaillée des 5 sources, justification des choix RFM |
+| **Feature Engineering** | `src/01_rfms_processing_pipeline.py` | Code production (PEP8) : chargement → transformation → export parquet |
+| **Modélisation** | `notebooks/02_modeling.ipynb` | Comparaison K-Means, GMM, Agglomerative ; sélection meilleur modèle |
+| **Personas** | `notebooks/02_modeling.ipynb` | 5 segments marketing exploitables |
+| **Maintenance** | `notebooks/03_simulation.ipynb` | Recommandation fréquence mise à jour ; drift detection |
 
-**C. Clustering**
+## 📊 Métriques RFM
 
-- Standardisation
-- Dimension reduction (PCA)
-- Tester K-Means, GMM, Agglomerative
-- Valider les clusters (Silhouette, Davies-Bouldin)
+Par client (customer_unique_id):
 
+- **Recency (R)**: Jours depuis dernier achat
+- **Frequency (F)**: Nombre total de commandes
+- **Monetary (M)**: Montant total dépensé (€)
+- **Satisfaction (S)**: Score moyen des avis (1-5)
 
-**La segmentation proposée doit être exploitable et facile d’utilisation par notre équipe Marketing**. Elle doit au minimum **pouvoir différencier les bons et moins bons clients** en termes de commandes et de satisfaction. Nous attendons bien sûr une segmentation sur l’ensemble des clients.
+## 🎯 Personas Marketing attendus
 
-Dans un deuxième temps, une fois le modèle de segmentation choisi, nous souhaiterions  que vous nous fassiez **une recommandation de fréquence à laquelle la segmentation doit être mise à jour pour rester pertinente**, afin de pouvoir effectuer **un devis de contrat de maintenance**.
+1. **Premium Loyalists** → Haute fréquence + dépense élevée + satisfaction
+2. **Bargain Hunters** → Fréquence moyenne + basse dépense
+3. **High-Value Buyers** → Basse fréquence + dépense très élevée
+4. **At-Risk Customers** → Recency très élevée (inactifs)
+5. **Early-Churners** → Très peu de commandes
 
+## 💡 Points clés
 
-**D. Interprétation marketing**
+✅ **Segmentation stable et maintenable** : Algorithme reproductible, fréquence de mise à jour définie
+✅ **Exploitable par Marketing** : Personas clairs avec actions recommandées
+✅ **Scalable** : Intégration de nouveaux clients définie
+✅ **Code production** : Respecte PEP8 et conventions Olist
 
-Créer des personas :
+## 📚 Données source
 
-- Premium Loyalists
-- Bargain Hunters
-- Low-Frequency High-Value buyers
-- At-risk customers
-- Early-churners
+Dataset Olist (~100k commandes, 2016-2018):
+- olist_orders_dataset
+- olist_customers_dataset
+- olist_order_items_dataset
+- olist_order_payments_dataset
+- olist_order_reviews_dataset
 
-**E. Livrables**
+## 📖 Schéma de la base
 
-Strategy book de **traitement des données (data pipeline), de segmentations (simple et interprétable par l'équipe Marketing) et de maintenance du modèle de segmentation régulière prenant en compte le nouveaux clients et les nouveaux comportement (but: segmentation cohérente)**
+![olist-database-modeling](assets/images/olist-database-modeling.png)
 
-- Un notebook de l'analyse exploratoire (non cleané, pour comprendre la démarche d'acquisition de données RFM).
-- Un notebook (ou code commenté au choix) d’essais des différentes approches de modélisation (non cleané, pour comprendre la démarche de modélisation).
-- Un notebook de simulation pour déterminer la fréquence nécessaire de mise à jour du modèle de segmentation (à une éventuelle dérive du modèle).
-**NB** : Le code fourni doit respecter la **convention PEP8**, pour être utilisable par Olist.
-
----
-## Suggestion de **Feature Engineering Marketing**
-
-Ajouter des variables complémentaires :
-
-- catégorie préférée
-- panier moyen
-- fidélité (répétition de vendeurs)
-- délai moyen de livraison
-- taux de retour ou remboursement
-- sentiment moyen des reviews
-  - Données externes possibles :
-  - socio-démographie par code postal
-  - revenus moyens par région
-  - IPCA / inflation (corrélation prix vs satisfaction)
-
----
-
-## Reconnaissances
-
-Tous mes remerciements à Olist pour leurs données open source :
+## 🙏 Remerciements
 
 ```
 @misc{olist_andr__sionek_2018,
@@ -109,4 +117,11 @@ Tous mes remerciements à Olist pour leurs données open source :
 	publisher={Kaggle},
 	author={Olist and André Sionek},
 	year={2018}
-}```
+}
+```
+
+
+---
+
+**Status**: En cours de développement
+**Dernière mise à jour**: Novembre 2025
