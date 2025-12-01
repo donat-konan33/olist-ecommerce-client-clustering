@@ -1,7 +1,7 @@
 [project]
 name = "olist-ecommerce-client-clustering"
 version = "0.1.0"
-description = ""
+description = "Segmentation des clients d'un site de e-commerce Olist"
 authors = [
     {name = "donatien konan",email = "donatien.konan.pro@gmail.com"}
 ]
@@ -16,6 +16,8 @@ dependencies = [
     "seaborn (>=0.13.2,<0.14.0)",
     "scipy (>=1.16.3,<2.0.0)",
     "fastparquet (>=2024.11.0,<2025.0.0)",
+    "pyclustering (>=0.10.1.2,<0.11.0.0)",
+    "scikit-learn (>=1.7.2,<2.0.0)",
 ]
 
 [tool.poetry]

@@ -1732,6 +1732,23 @@ numpy = "*"
 scipy = ">=1.11.0"
 
 [[package]]
+name = "pyclustering"
+version = "0.10.1.2"
+description = "pyclustring is a python data mining library"
+optional = false
+python-versions = ">=3.6"
+groups = ["main"]
+files = [
+    {file = "pyclustering-0.10.1.2.tar.gz", hash = "sha256:8a98fd299fcc1e21b7b7c963275162dd7194aa3d921aa66d313775597cf833d1"},
+]
+
+[package.dependencies]
+matplotlib = ">=3.0.0"
+numpy = ">=1.15.2"
+Pillow = ">=5.2.0"
+scipy = ">=1.1.0"
+
+[[package]]
 name = "pyparsing"
 version = "3.2.5"
 description = "pyparsing - Classes and methods to define and execute parsing grammars"
@@ -2557,4 +2574,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "14e4293396b288dd8162f8c62a15416ebade93b6e377c5d0d6e3576f999d0ac3"
+content-hash = "00c37aa113f484c2f772ecb94b021f26beeca085160ebd873109f1376dc8e9b6"
