@@ -18,6 +18,10 @@ dependencies = [
     "fastparquet (>=2024.11.0,<2025.0.0)",
     "pyclustering (>=0.10.1.2,<0.11.0.0)",
     "scikit-learn (>=1.7.2,<2.0.0)",
+    "plotly (>=6.5.0,<7.0.0)",
+    "nbformat (>=5.10.4,<6.0.0)",
+    "umap-learn (>=0.5.9.post2,<0.6.0)",
+    "hdbscan (>=0.8.40,<0.9.0)",
 ]
 
 [tool.poetry]
