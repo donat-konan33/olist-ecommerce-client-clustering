@@ -23,6 +23,9 @@ dependencies = [
     "umap-learn (>=0.5.9.post2,<0.6.0)",
     "hdbscan (>=0.8.40,<0.9.0)",
     "ipywidgets (>=8.1.8,<9.0.0)",
+    "evidently (==0.4.3)",
+    "alibi-detect (>=0.13.0,<0.14.0)",
+    "update (>=0.0.1,<0.0.2)",
 ]
 
 [tool.poetry]
