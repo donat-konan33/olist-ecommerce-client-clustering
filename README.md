@@ -10,20 +10,37 @@ Créer une **segmentation marketing exploitable** différenciant les bons et moi
 
 ```
 olist-ecommerce-client-clustering/
-├── notebooks/
-│   ├── 01_eda.ipynb                      # Analyse exploratoire des données
-│   ├── 02_modeling.ipynb                 # Tests des algorithmes de clustering
-│   └── 03_simulation.ipynb               # Fréquence de mise à jour du modèle
-├── src/
-│   └── 01_rfms_processing_pipeline.py    # Pipeline de traitement RFM
-├── data/
-│   ├── raw/                              # Données brutes Olist (9 CSV)
-│   └── processed/                        # Données transformées (Parquet)
-├── assets/images/
-│   └── olist-database-modeling.png       # Schéma de la base de données
-├── scripts/
-│   └── download-data.sh                  # Téléchargement Kaggle
-└── requirements.txt
+.
+├── artifacts/              # Configs + résultats de monitoring
+│   ├── config/
+│   └── metrics_embeddings/
+│
+├── assets/                 # Images pour documentation
+│   └── images/
+│
+├── data/                   # Données du projet
+│   ├── raw/                # données brutes Olist
+│   └── processed/          # données transformées (RFMS)
+│
+├── notebooks/              # Notebooks d'analyse & expérimentation
+│
+├── outputs/                # Résultats du projet
+│   ├── figures/
+│   └── reports/
+│
+├── scripts/                # Scripts utilitaires
+│
+├── src/                    # Code source & pipelines
+│   ├── 01_rfms_processing_pipeline.py
+│   ├── 02_cluster_rfms.py
+│   ├── 03_cluster_monotoring.py
+│   └── olist_ecommerce_client_clustering/
+│
+├── tests/                  # Tests unitaires
+│
+├── pyproject.toml
+└── README.md
+
 ```
 
 ## 🚀 Installation
@@ -53,15 +70,27 @@ Génère deux fichiers parquet dans `data/processed/`:
 - `rfms_active_reviewers.parquet` (98k+ clients avec avis)
 - `rfms_silent_customers.parquet` (~1k clients sans avis)
 
+```bash
+python src/02_cluster_rfms.py --split-date '2017-12'
+```
+
+Génère deux fichiers :
+- **parquet** dans ``data/clustered``:
+  - ``clusters_labels_until_2017-12.parquet``
+
+- **json** dans ``artifacts/cluster_performance``
+  - ``clustering_performance_until_2017-12.json``
+
+
 ## 📈 Livrables
 
 | Phase | Fichier | Contenu |
 |-------|---------|---------|
-| **Exploration** | `notebooks/01_eda.ipynb` | Analyse détaillée des 5 sources, justification des choix RFM |
+| **Exploration** | `notebooks/01_eda.ipynb` | Analyse détaillée des sources, justification des choix RFM |
 | **Feature Engineering** | `src/01_rfms_processing_pipeline.py` | Code production (PEP8) : chargement → transformation → export parquet |
-| **Modélisation** | `notebooks/02_cluster_rfms.ipynb` | Comparaison K-Means, GMM, Agglomerative ; sélection meilleur modèle |
-| **Personas** | `notebooks/02_cluster_rfms.ipynb` | 5 segments marketing exploitables |
-| **Maintenance** | `notebooks/03_cluster_monotoring.ipynb` | Recommandation fréquence mise à jour ; drift detection |
+| **Modélisation** | `notebooks/02_clustering.ipynb` | Comparaison K-Means, GMM, Agglomerative, DBSCAN/HDBSCAN ; sélection meilleur modèle |
+| **Maintenance** | `notebooks/03_cluster_monotoring.ipynb` | Recommandation fréquence mise à jour ; Data Drift et Clustering drift  |
+| **Personas** | `notebooks/04_cluster_profiling.ipynb` | Définir les segments marketing exploitables |
 
 ## 📊 Métriques RFM
 
@@ -72,13 +101,6 @@ Par client (customer_unique_id):
 - **Monetary (M)**: Montant total dépensé (€)
 - **Satisfaction (S)**: Score moyen des avis (1-5)
 
-## 🎯 Personas Marketing attendus
-
-1. **Premium Loyalists** → Haute fréquence + dépense élevée + satisfaction
-2. **Bargain Hunters** → Fréquence moyenne + basse dépense
-3. **High-Value Buyers** → Basse fréquence + dépense très élevée
-4. **At-Risk Customers** → Recency très élevée (inactifs)
-5. **Early-Churners** → Très peu de commandes
 
 ## 💡 Points clés
 
@@ -121,4 +143,4 @@ Dataset Olist pour la RFM (~100k commandes, 2016-2018):
 
 **Status**: En cours de développement
 
-**Dernière mise à jour**: Novembre 2025
+**Dernière mise à jour**: Décembre 2025

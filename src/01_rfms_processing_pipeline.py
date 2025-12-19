@@ -239,9 +239,9 @@ class RFMSProcessingPipeline:
 
 if __name__ == "__main__":
     here = Path(__file__).resolve()
-    repo_wd = here.parent.parent
-    print(repo_wd)
-    pipeline = RFMSProcessingPipeline(repo_wd)
+    project_root = here.parent.parent
+    print(project_root)
+    pipeline = RFMSProcessingPipeline(project_root)
     rfms_data, active_reviewers, silent_customers = pipeline.run()
 
     print("RFMS processing pipeline completed successfully.", "\n", 5 * "-----")
