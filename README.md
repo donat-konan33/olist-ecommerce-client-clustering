@@ -110,7 +110,7 @@ Par client (customer_unique_id):
 
 ✅ **Scalable** : Intégration de nouveaux clients définie
 
-✅ **Code production** : Respecte PEP8 et conventions Olist
+✅ **Code production** : Respecte PEP8 et conventions Olist (Configuration avec Ruff)
 
 ## 📚 Données source
 

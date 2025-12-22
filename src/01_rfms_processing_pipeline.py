@@ -1,7 +1,8 @@
-import pandas as pd
-import os
 from pathlib import Path
+
 import duckdb as db
+import pandas as pd
+
 
 class RFMSProcessingPipeline:
     """
@@ -25,10 +26,18 @@ class RFMSProcessingPipeline:
     def load_datasets(self) -> None:
         """Load all required datasets from raw data directory."""
         olist_orders_dataset_path = self.repo_wd / "data/raw/olist_orders_dataset.csv"
-        olist_customers_dataset_path = self.repo_wd / "data/raw/olist_customers_dataset.csv"
-        olist_order_payments_dataset_path = self.repo_wd / "data/raw/olist_order_payments_dataset.csv"
-        olist_order_items_dataset_path = self.repo_wd / "data/raw/olist_order_items_dataset.csv"
-        olist_order_reviews_dataset_path = self.repo_wd / "data/raw/olist_order_reviews_dataset.csv"
+        olist_customers_dataset_path = (
+            self.repo_wd / "data/raw/olist_customers_dataset.csv"
+        )
+        olist_order_payments_dataset_path = (
+            self.repo_wd / "data/raw/olist_order_payments_dataset.csv"
+        )
+        olist_order_items_dataset_path = (
+            self.repo_wd / "data/raw/olist_order_items_dataset.csv"
+        )
+        olist_order_reviews_dataset_path = (
+            self.repo_wd / "data/raw/olist_order_reviews_dataset.csv"
+        )
 
         self.orders_df = pd.read_csv(olist_orders_dataset_path)
         self.customers_df = pd.read_csv(olist_customers_dataset_path)
@@ -38,54 +47,63 @@ class RFMSProcessingPipeline:
 
     def preprocess_orders(self) -> None:
         """Convert timestamp columns and categorical columns in orders dataset."""
-        timestamp_cols = [
-            'order_purchase_timestamp'
-        ]
+        timestamp_cols = ["order_purchase_timestamp"]
 
         for col in timestamp_cols:
             self.orders_df[col] = pd.to_datetime(self.orders_df[col])
 
-        self.orders_df['order_id'] = self.orders_df['order_id'].astype('category')
-        self.orders_df['customer_id'] = self.orders_df['customer_id'].astype('category')
-        self.orders_df['order_status'] = self.orders_df['order_status'].astype('category')
+        self.orders_df["order_id"] = self.orders_df["order_id"].astype("category")
+        self.orders_df["customer_id"] = self.orders_df["customer_id"].astype("category")
+        self.orders_df["order_status"] = self.orders_df["order_status"].astype(
+            "category"
+        )
 
     def preprocess_customers(self) -> None:
         """Convert all columns in customers dataset to category type for memory optimization."""
         for col in self.customers_df.columns:
-            self.customers_df[col] = self.customers_df[col].astype('category')
+            self.customers_df[col] = self.customers_df[col].astype("category")
 
     def preprocess_items(self) -> None:
         """Convert object columns to category and timestamp columns to datetime."""
         for col in self.items_df.columns:
-            if self.items_df[col].dtype == 'object':
-                if col == 'shipping_limit_date':
+            if self.items_df[col].dtype == "object":
+                if col == "shipping_limit_date":
                     self.items_df[col] = pd.to_datetime(self.items_df[col])
                 else:
-                    self.items_df[col] = self.items_df[col].astype('category')
+                    self.items_df[col] = self.items_df[col].astype("category")
 
     def preprocess_payments(self) -> None:
         """Convert object columns in payments dataset to category type."""
         for col in self.payments_df.columns:
-            if self.payments_df[col].dtype == 'object':
-                self.payments_df[col] = self.payments_df[col].astype('category')
+            if self.payments_df[col].dtype == "object":
+                self.payments_df[col] = self.payments_df[col].astype("category")
 
     def preprocess_reviews(self) -> None:
         """Select relevant columns and convert order_id to category."""
-        self.reviews_df = self.reviews_df[['order_id', 'review_score']]
-        self.reviews_df['order_id'] = self.reviews_df['order_id'].astype('category')
-        self.reviews_df = pd.DataFrame(
-            self.reviews_df.groupby('order_id')['review_score'].mean().round(1)
-        ).reset_index().astype('category')
+        self.reviews_df = self.reviews_df[["order_id", "review_score"]]
+        self.reviews_df["order_id"] = self.reviews_df["order_id"].astype("category")
+        self.reviews_df = (
+            pd.DataFrame(
+                self.reviews_df.groupby("order_id")["review_score"].mean().round(1)
+            )
+            .reset_index()
+            .astype("category")
+        )
 
     def calculate_monetary(self) -> pd.DataFrame:
         """Calculate monetary values from items dataset."""
-        items_subset = self.items_df[['order_id', 'order_item_id', 'price', 'freight_value']].copy()
-        items_subset['amount'] = items_subset['price'] + items_subset['freight_value']
+        items_subset = self.items_df[
+            ["order_id", "order_item_id", "price", "freight_value"]
+        ].copy()
+        items_subset["amount"] = items_subset["price"] + items_subset["freight_value"]
 
-        monetary_df = items_subset.groupby('order_id').agg(
-            number_of_items=('order_item_id', 'max'),
-            total_amount=('amount', 'sum')
-        ).reset_index()
+        monetary_df = (
+            items_subset.groupby("order_id")
+            .agg(
+                number_of_items=("order_item_id", "max"), total_amount=("amount", "sum")
+            )
+            .reset_index()
+        )
 
         return monetary_df
 
@@ -97,42 +115,43 @@ class RFMSProcessingPipeline:
             DataFrame containing RFMS metrics per customer
         """
         # Prepare order data with recency
-        order_data = self.orders_df[['order_id', 'customer_id', 'order_purchase_timestamp']].copy()
-        order_data['recency'] = (order_data['order_purchase_timestamp'].max() -
-                               order_data['order_purchase_timestamp']).dt.days
+        order_data = self.orders_df[
+            ["order_id", "customer_id", "order_purchase_timestamp"]
+        ].copy()
+        order_data["recency"] = (
+            order_data["order_purchase_timestamp"].max()
+            - order_data["order_purchase_timestamp"]
+        ).dt.days
 
         # Calculate monetary values
         monetary_df = self.calculate_monetary()
 
         # Aggregate payments
-        payment_agg = self.payments_df.groupby('order_id')['payment_value'].sum()
+        payment_agg = self.payments_df.groupby("order_id")["payment_value"].sum()
 
         # Merge datasets
-        rm_data = order_data.merge(
-            pd.DataFrame(payment_agg).reset_index(),
-            how='left',
-            on='order_id'
-        ).merge(
-            monetary_df,
-            how='left',
-            on='order_id'
-        ).merge(
-            self.customers_df.reset_index(drop=True),
-            how='left',
-            on='customer_id'
+        rm_data = (
+            order_data.merge(
+                pd.DataFrame(payment_agg).reset_index(), how="left", on="order_id"
+            )
+            .merge(monetary_df, how="left", on="order_id")
+            .merge(
+                self.customers_df.reset_index(drop=True), how="left", on="customer_id"
+            )
         )
 
         # Fill missing payment values with total_amount
-        rm_data['payment_value'] = rm_data['payment_value'].fillna(rm_data['total_amount'])
-        rm_data = rm_data.drop(columns=['total_amount'])
-        rm_data = rm_data.rename(columns={'payment_value': 'monetary'})
+        rm_data["payment_value"] = rm_data["payment_value"].fillna(
+            rm_data["total_amount"]
+        )
+        rm_data = rm_data.drop(columns=["total_amount"])
+        rm_data = rm_data.rename(columns={"payment_value": "monetary"})
 
         # Merge with reviews
-        rfms_data = rm_data.merge(
-            self.reviews_df,
-            how='left',
-            on='order_id'
-        )
+        rfms_data = rm_data.merge(self.reviews_df, how="left", on="order_id")
+
+        # Register DataFrame in DuckDB (temporary)
+        db.register("rfms_data", rfms_data)
 
         # Use DuckDB for aggregation
         rfms_duck_data = db.query(
@@ -165,7 +184,9 @@ class RFMSProcessingPipeline:
             """
         ).df()
 
-        rfms_duck_data['customer_zip_code_prefix'] = rfms_duck_data['customer_zip_code_prefix'].astype('category')
+        rfms_duck_data["customer_zip_code_prefix"] = rfms_duck_data[
+            "customer_zip_code_prefix"
+        ].astype("category")
 
         return rfms_duck_data
 
@@ -179,13 +200,17 @@ class RFMSProcessingPipeline:
         Returns:
             Tuple of (active_reviewers_df, silent_customers_df)
         """
-        active_reviewers = rfms_data[~rfms_data['review_score'].isna()]
-        silent_customers = rfms_data[rfms_data['review_score'].isna()]
+        active_reviewers = rfms_data[~rfms_data["review_score"].isna()]
+        silent_customers = rfms_data[rfms_data["review_score"].isna()]
 
         return active_reviewers, silent_customers
 
-    def save_processed_data(self, rfms_data: pd.DataFrame, active_reviewers: pd.DataFrame,
-                           silent_customers: pd.DataFrame) -> None:
+    def save_processed_data(
+        self,
+        rfms_data: pd.DataFrame,
+        active_reviewers: pd.DataFrame,
+        silent_customers: pd.DataFrame,
+    ) -> None:
         """
         Save processed RFMS data to parquet format.
 
@@ -198,21 +223,19 @@ class RFMSProcessingPipeline:
         output_dir.mkdir(parents=True, exist_ok=True)
 
         rfms_data.to_parquet(
-            output_dir / "rfms_data.parquet",
-            index=False,
-            engine="fastparquet"
+            output_dir / "rfms_data.parquet", index=False, engine="fastparquet"
         )
 
         active_reviewers.to_parquet(
             output_dir / "rfms_active_reviewers.parquet",
             index=False,
-            engine="fastparquet"
+            engine="fastparquet",
         )
 
         silent_customers.to_parquet(
             output_dir / "rfms_silent_customers.parquet",
             index=False,
-            engine="fastparquet"
+            engine="fastparquet",
         )
 
     def run(self) -> tuple:
