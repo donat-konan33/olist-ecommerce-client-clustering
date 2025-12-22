@@ -57,7 +57,7 @@ Les 5 fichiers CSV seront extraits dans `data/raw/`.
 ### 2. Installer les dépendances
 
 ```bash
-pip install -r requirements.txt
+poetry install
 ```
 
 ### 3. Exécuter la pipeline RFM
