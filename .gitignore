@@ -1,2 +1,13 @@
 __pycache__
 my.md
+.vscode/
+.ruff_cache/
+.venv/
+
+# Fichiers volumineux generes par les executions
+artifacts/models/*
+!artifacts/models/.gitkeep
+artifacts/metrics_embeddings/*
+!artifacts/metrics_embeddings/.gitkeep
+mlruns/*
+!mlruns/.gitkeep
