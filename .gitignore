@@ -11,3 +11,6 @@ artifacts/metrics_embeddings/*
 !artifacts/metrics_embeddings/.gitkeep
 mlruns/*
 !mlruns/.gitkeep
+data/*
+!data/**/.gitkeep
+!data/README.md
