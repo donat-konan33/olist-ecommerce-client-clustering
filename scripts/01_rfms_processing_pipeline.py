@@ -1,3 +1,4 @@
+import argparse
 from pathlib import Path
 
 import duckdb as db
@@ -84,7 +85,9 @@ class RFMSProcessingPipeline:
         self.reviews_df["order_id"] = self.reviews_df["order_id"].astype("category")
         self.reviews_df = (
             pd.DataFrame(
-                self.reviews_df.groupby("order_id")["review_score"].mean().round(1)
+                self.reviews_df.groupby("order_id", observed=False)["review_score"]
+                .mean()
+                .round(1)
             )
             .reset_index()
             .astype("category")
@@ -260,14 +263,22 @@ class RFMSProcessingPipeline:
         return rfms_data, active_reviewers, silent_customers
 
 
-if __name__ == "__main__":
-    here = Path(__file__).resolve()
-    project_root = here.parent.parent
-    print(project_root)
-    pipeline = RFMSProcessingPipeline(project_root)
+def main() -> None:
+    parser = argparse.ArgumentParser(description="Prépare les données RFMS Olist")
+    parser.add_argument(
+        "--project-root",
+        type=Path,
+        default=Path(__file__).resolve().parents[1],
+        help="Racine du projet contenant data/raw",
+    )
+    args = parser.parse_args()
+    pipeline = RFMSProcessingPipeline(args.project_root)
     rfms_data, active_reviewers, silent_customers = pipeline.run()
-
     print("RFMS processing pipeline completed successfully.", "\n", 5 * "-----")
     print(f"RFMS Data Shape: {rfms_data.shape}")
     print(f"Active Reviewers: {len(active_reviewers)}")
     print(f"Silent Customers: {len(silent_customers)}")
+
+
+if __name__ == "__main__":
+    main()

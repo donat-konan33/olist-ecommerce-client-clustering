@@ -1,0 +1,13 @@
+{
+  "feature_psi": {
+    "recency": 12.50018548926479,
+    "frequency": 0.0,
+    "monetary": 0.01026044262468104,
+    "review_score": 0.0010930340893740742
+  },
+  "drift_detected": true,
+  "psi_threshold": 0.2,
+  "cluster_js_distance": 0.046762784026180504,
+  "reference_noise_ratio": 0.0,
+  "current_noise_ratio": 0.0
+}
